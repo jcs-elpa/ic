@@ -6,7 +6,7 @@
 ;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/jcs-elpa/ic
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "26.1") (ppp "2.2.4") (msgu "0.1.0") (dash "2.14.1"))
+;; Package-Requires: ((emacs "26.1") (ppp "2.2.4") (msgu "0.1.0") (ht "2.0") (dash "2.14.1"))
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -35,6 +35,7 @@
 
 (require 'ppp)
 (require 'msgu)
+(require 'ht)
 (require 'dash)
 
 (defgroup ic nil
