@@ -50,7 +50,7 @@
   :group 'ic)
 
 (defvar ic-inhibit-clear t
-  "If non-nil, clear messages buffer before logging.")
+  "If nil, clear messages buffer before logging.")
 
 ;;
 ;;; Util
