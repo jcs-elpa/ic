@@ -11,7 +11,7 @@
 Pretty print anything.
 
 ```elisp
-(ic-message '(1 2 3 4))
+(ic-message (lambda (&rest _) (message "hello")))
 ```
 
 Output,
