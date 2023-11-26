@@ -31,6 +31,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'pp)
 
 (require 'ppp)
@@ -119,12 +120,15 @@ Arguments FNC and ARGS are for function `advice-add'."
 Arguments FUNC and SEQ are for function `mapconcat'."
   (let ((result "")
         (next-sep)
-        (next-str))
+        (next-str)
+        (count 0)
+        (len (1- (length seq))))
     (dolist (elm seq)
       (setq next-str (funcall func elm)
             next-sep (if (string-suffix-p "\n" next-str) "" " ")
-            result (concat result next-str next-sep)))
-    (string-trim result)))
+            result (concat result next-str (if (= count len) "" next-sep)))
+      (cl-incf count))
+    result))
 
 ;;;###autoload
 (defun ic-message (&rest args)
