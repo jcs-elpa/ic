@@ -125,8 +125,10 @@ Arguments FUNC and SEQ are for function `mapconcat'."
         (len (1- (length seq))))
     (dolist (elm seq)
       (setq next-str (funcall func elm)
-            next-sep (if (string-suffix-p "\n" next-str) "" " ")
-            result (concat result next-str (if (= count len) "" next-sep)))
+            next-sep (if (or (= count len)
+                             (string-suffix-p "\n" next-str))
+                         "" " ")
+            result (concat result next-str next-sep))
       (cl-incf count))
     result))
 
