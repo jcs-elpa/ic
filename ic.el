@@ -110,8 +110,8 @@ Arguments FNC and ARGS are for function `advice-add'."
          (concat (pp object)
                  (ppp-plist-to-string (ht-to-plist object))))
         (t
-         (if-let* ((func (cond ((listp object)       #'ppp-list-to-string)
-                               (t                    #'pp)))
+         (if-let* ((func (cond ((listp object) #'ppp-list-to-string)
+                               (t              #'pp)))
                    (result (msgu-silent (ignore-errors (apply func (list object))))))
              (ic-2str result)
            (ic-2str object)))))
@@ -142,7 +142,7 @@ Arguments FUNC and SEQ are for function `mapconcat'."
 ;;;###autoload
 (defun ic-princ (&rest args)
   "Wrapper for function `princ' (ARGS)."
-  (let ((output (format "%s" (mapconcat #'ic--pp args))))
+  (let ((output (format "%s" (ic--mapconcat #'ic--pp args))))
     (princ output)))
 
 ;;
