@@ -110,10 +110,11 @@ Arguments FNC and ARGS are for function `advice-add'."
          (concat (pp object)
                  (ppp-plist-to-string (ht-to-plist object))))
         (t
-         (let* ((func (cond ((listp object)       #'ppp-list-to-string)
-                            (t                    #'pp)))
-                (result (msgu-silent (apply func (list object)))))
-           (ic-2str result)))))
+         (if-let* ((func (cond ((listp object)       #'ppp-list-to-string)
+                               (t                    #'pp)))
+                   (result (msgu-silent (ignore-errors (apply func (list object))))))
+             (ic-2str result)
+           (ic-2str object)))))
 
 (defun ic--mapconcat (func seq)
   "Like function `mapconcat', but compatible to newline separator.
