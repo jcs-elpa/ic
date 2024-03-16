@@ -137,13 +137,15 @@ Arguments FUNC and SEQ are for function `mapconcat'."
 ;;;###autoload
 (defun ic-message (&rest args)
   "Wrapper for function `message' (ARGS)."
-  (message "%s" (ic--mapconcat #'ic--pp args)))
+  (msgu-unsilent
+    (message "%s" (ic--mapconcat #'ic--pp args))))
 
 ;;;###autoload
 (defun ic-princ (&rest args)
   "Wrapper for function `princ' (ARGS)."
-  (let ((output (format "%s" (ic--mapconcat #'ic--pp args))))
-    (princ output)))
+  (msgu-unsilent
+    (let ((output (format "%s" (ic--mapconcat #'ic--pp args))))
+      (princ output))))
 
 ;;
 ;;; Register Events
