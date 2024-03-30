@@ -6,7 +6,7 @@
 ;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/jcs-elpa/ic
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "26.1") (ppp "2.2.4") (msgu "0.1.0") (ht "2.0") (dash "2.14.1"))
+;; Package-Requires: ((emacs "29.1") (ppp "2.2.4") (msgu "0.1.0") (ht "2.0") (dash "2.14.1"))
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -103,20 +103,26 @@ Arguments FNC and ARGS are for function `advice-add'."
     (with-current-buffer (messages-buffer)
       (goto-char (point-max)))))
 
+(defun ic-plistp (object)
+  "Return t if OBJECT is a property list."
+  (and (plistp object)
+       (keywordp (car object))))
+
 (defun ic--pp (object)
   "Pretty print OBJECT."
-  (cond ((stringp object) object)
-        ((hash-table-p object)
-         (concat (pp object)
-                 (ppp-plist-to-string (ht-to-plist object))))
-        (t
-         (if-let* ((func (cond ((functionp object) #'pp)
-                               ((plistp object) #'ppp-plist-to-string)
-                               ((listp object) #'ppp-list-to-string)
-                               (t              #'pp)))
-                   (result (msgu-silent (ignore-errors (apply func (list object))))))
-             (ic-2str result)
-           (ic-2str object)))))
+  (let ((pp-use-max-width t))
+    (cond ((stringp object) object)
+          ((hash-table-p object)
+           (concat (pp object)
+                   (ppp-plist-to-string (ht-to-plist object))))
+          (t
+           (if-let* ((func (cond ((functionp object) #'pp)
+                                 ((ic-plistp object) #'ppp-plist-to-string)
+                                 ((listp object)     #'pp)
+                                 (t                  #'pp)))
+                     (result (msgu-silent (ignore-errors (apply func (list object))))))
+               (ic-2str result)
+             (ic-2str object))))))
 
 (defun ic--mapconcat (func seq)
   "Like function `mapconcat', but compatible to newline separator.

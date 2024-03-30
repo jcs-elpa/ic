@@ -13,7 +13,7 @@
 (source 'melpa)
 (source 'jcs-elpa)
 
-(depends-on "emacs" "26.1")
+(depends-on "emacs" "29.1")
 (depends-on "ppp")
 (depends-on "msgu")
 (depends-on "ht")
