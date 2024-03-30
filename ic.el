@@ -110,7 +110,8 @@ Arguments FNC and ARGS are for function `advice-add'."
 
 (defun ic--pp (object)
   "Pretty print OBJECT."
-  (let ((pp-use-max-width t))
+  (let ((pp-use-max-width t)
+        (pp-max-width fill-column))
     (cond ((stringp object) object)
           ((hash-table-p object)
            (concat (pp object)
