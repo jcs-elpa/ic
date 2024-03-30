@@ -60,6 +60,17 @@
   "Convert OBJ to string."
   (format "%s" obj))
 
+;; NOTE: Unused
+(defun ic-alistp (object)
+  "Return t if OBJECT is a associate list."
+  (and (listp object)
+       (consp (car object))))
+
+(defun ic-plistp (object)
+  "Return t if OBJECT is a property list."
+  (and (plistp object)
+       (keywordp (car object))))
+
 ;;
 ;;; Face
 
@@ -103,12 +114,8 @@ Arguments FNC and ARGS are for function `advice-add'."
     (with-current-buffer (messages-buffer)
       (goto-char (point-max)))))
 
-(defun ic-plistp (object)
-  "Return t if OBJECT is a property list."
-  (and (plistp object)
-       (keywordp (car object))))
-
-(defun ic--pp (object)
+;;;###autoload
+(defun ic-pp (object)
   "Pretty print OBJECT."
   (let ((pp-use-max-width t)
         (pp-max-width fill-column))
@@ -116,14 +123,11 @@ Arguments FNC and ARGS are for function `advice-add'."
           ((hash-table-p object)
            (concat (pp object)
                    (ppp-plist-to-string (ht-to-plist object))))
+          ((functionp object) (pp object))
+          ((ic-plistp object) (ppp-plist-to-string object))
+          ((listp object) (pp object))
           (t
-           (if-let* ((func (cond ((functionp object) #'pp)
-                                 ((ic-plistp object) #'ppp-plist-to-string)
-                                 ((listp object)     #'pp)
-                                 (t                  #'pp)))
-                     (result (msgu-silent (ignore-errors (apply func (list object))))))
-               (ic-2str result)
-             (ic-2str object))))))
+           (ic-2str object)))))
 
 (defun ic--mapconcat (func seq)
   "Like function `mapconcat', but compatible to newline separator.
@@ -149,15 +153,15 @@ Arguments FUNC and SEQ are for function `mapconcat'."
   (msgu-unsilent
     (if-let* ((fmt (car args))
               ((and (stringp fmt)
-                    (string-match-p "%%" fmt))))
+                    (string-match-p "%" fmt))))
         (apply #'message fmt (cl-rest args))
-      (message "%s" (ic--mapconcat #'ic--pp args)))))
+      (message "%s" (ic--mapconcat #'ic-pp args)))))
 
 ;;;###autoload
 (defun ic-princ (&rest args)
   "Wrapper for function `princ' (ARGS)."
   (msgu-unsilent
-    (let ((output (format "%s" (ic--mapconcat #'ic--pp args))))
+    (let ((output (format "%s" (ic--mapconcat #'ic-pp args))))
       (princ output))))
 
 ;;
