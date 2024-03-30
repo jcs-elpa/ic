@@ -147,8 +147,10 @@ Arguments FUNC and SEQ are for function `mapconcat'."
 (defun ic-message (&rest args)
   "Wrapper for function `message' (ARGS)."
   (msgu-unsilent
-    (if (stringp (car args))
-        (apply #'message (cl-first args) (cl-rest args))
+    (if-let* ((fmt (car args))
+              ((and (stringp fmt)
+                    (string-match-p "%%" fmt))))
+        (apply #'message fmt (cl-rest args))
       (message "%s" (ic--mapconcat #'ic--pp args)))))
 
 ;;;###autoload
