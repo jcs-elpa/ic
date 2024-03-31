@@ -159,6 +159,9 @@ Arguments FUNC and SEQ are for function `mapconcat'."
       (message "%s" (ic--mapconcat #'ic-pp args)))))
 
 ;;;###autoload
+(defalias 'ic #'ic-message "Print any object.")
+
+;;;###autoload
 (defun ic-princ (&rest args)
   "Wrapper for function `princ' (ARGS)."
   (msgu-unsilent
