@@ -119,7 +119,8 @@ Arguments FNC and ARGS are for function `advice-add'."
   "Pretty print OBJECT."
   (let ((pp-use-max-width t)
         (pp-max-width fill-column))
-    (cond ((stringp object) object)
+    (cond ((null nil) (ic-2str object))
+          ((stringp object) object)
           ((hash-table-p object)
            (concat (pp object)
                    (format "size: %s\n" (ht-size object))
@@ -134,19 +135,10 @@ Arguments FNC and ARGS are for function `advice-add'."
   "Like function `mapconcat', but compatible to newline separator.
 
 Arguments FUNC and SEQ are for function `mapconcat'."
-  (let ((result "")
-        (next-sep)
-        (next-str)
-        (count 0)
-        (len (1- (length seq))))
+  (let ((new-seq))
     (dolist (elm seq)
-      (setq next-str (funcall func elm)
-            next-sep (if (or (= count len)
-                             (string-suffix-p "\n" next-str))
-                         "" " ")
-            result (concat result next-str next-sep))
-      (cl-incf count))
-    result))
+      (push (funcall func elm) new-seq))
+    (string-join (reverse new-seq) " ")))
 
 ;;;###autoload
 (defun ic-message (&rest args)
@@ -156,7 +148,7 @@ Arguments FUNC and SEQ are for function `mapconcat'."
               ((and (stringp fmt)
                     (string-match-p "%" fmt))))
         (apply #'message fmt (cl-rest args))
-      (message "%s" (ic--mapconcat #'ic-pp args)))))
+      (apply #'message "%s" (list (ic--mapconcat #'ic-pp args))))))
 
 ;;;###autoload
 (defalias 'ic #'ic-message "Print any object.")
