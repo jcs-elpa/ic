@@ -122,12 +122,12 @@ Arguments FNC and ARGS are for function `advice-add'."
     (cond ((null object) (ic-2str object))
           ((stringp object) object)
           ((hash-table-p object)
-           (concat (pp object)
+           (concat (pp-to-string object)
                    (format "size: %s\n" (ht-size object))
-                   (pp (ht-to-alist object))))
-          ((functionp object) (pp object))
+                   (pp-to-string (ht-to-alist object))))
+          ((functionp object) (pp-to-string object))
           ((ic-plistp object) (ppp-plist-to-string object))
-          ((listp object) (pp object))
+          ((listp object) (pp-to-string object))
           (t
            (ic-2str object)))))
 
