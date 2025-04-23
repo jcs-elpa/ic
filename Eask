@@ -1,3 +1,5 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
 (package "ic"
          "0.1.0"
          "Pretty print to debug")
